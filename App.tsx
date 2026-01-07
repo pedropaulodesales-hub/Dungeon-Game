@@ -771,6 +771,8 @@ const App: React.FC = () => {
   // Independent Window States
   const [showInventory, setShowInventory] = useState(false);
   const [showEquipment, setShowEquipment] = useState(false);
+  // NEW: State for retire modal
+  const [showRetireModal, setShowRetireModal] = useState(false);
   
   // Tooltip State
   const [hoveredItem, setHoveredItem] = useState<{ item: Item, x: number, y: number } | null>(null);
@@ -1711,6 +1713,34 @@ const App: React.FC = () => {
           <ItemTooltip item={hoveredItem.item} position={{ x: hoveredItem.x, y: hoveredItem.y }} />
       )}
 
+      {/* RETIRE MODAL */}
+      {showRetireModal && (
+          <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
+              <div className="ui-panel max-w-md w-full p-8 border-red-900/50 shadow-[0_0_100px_rgba(139,0,0,0.3)] flex flex-col items-center">
+                  <div className="text-4xl mb-4 text-red-600 animate-pulse">☠</div>
+                  <h2 className="text-2xl exocet-font text-red-500 mb-6 text-center tracking-[0.3em] uppercase drop-shadow-md">Forsake Destiny?</h2>
+                  <p className="text-slate-400 font-serif italic text-center mb-8 leading-relaxed text-sm">
+                      "To abandon the path is to embrace oblivion. <br/>
+                      <span className="text-amber-500 font-bold">{character.name}</span> will be lost to the void forever."
+                  </p>
+                  <div className="flex gap-4 w-full">
+                      <button 
+                          onClick={() => setShowRetireModal(false)}
+                          className="flex-1 py-3 border border-[#444] text-slate-400 hover:text-white hover:border-slate-200 uppercase tracking-[0.2em] text-[10px] font-black transition-all bg-black/40 hover:bg-white/5"
+                      >
+                          Turn Back
+                      </button>
+                      <button 
+                          onClick={() => { setShowRetireModal(false); handleRestart(); }}
+                          className="flex-1 py-3 bg-red-950/40 border border-red-800 text-red-500 hover:bg-red-900/60 hover:text-red-200 uppercase tracking-[0.2em] text-[10px] font-black transition-all shadow-[0_0_20px_rgba(220,38,38,0.2)] hover:shadow-[0_0_30px_rgba(220,38,38,0.4)]"
+                      >
+                          Accept Fate
+                      </button>
+                  </div>
+              </div>
+          </div>
+      )}
+
       {/* COMPACT HUD */}
       <div className="absolute top-0 left-0 right-0 p-6 flex items-start justify-between z-50 pointer-events-none">
          <div className="flex items-start gap-4 pointer-events-auto">
@@ -1768,7 +1798,8 @@ const App: React.FC = () => {
                  <button className="px-5 ui-panel bg-[#1a1a20] border-[#444] text-[10px] text-amber-500 font-black uppercase tracking-[0.2em] hover:text-white hover:border-amber-600 transition-all rounded shadow-lg opacity-50 cursor-not-allowed">Skills</button>
                  <button onClick={() => setShowEquipment(!showEquipment)} className={`px-5 ui-panel border-[#444] text-[10px] font-black uppercase tracking-[0.2em] hover:text-white hover:border-amber-600 transition-all rounded shadow-lg ${showEquipment ? 'bg-amber-900/40 text-amber-100 border-amber-600' : 'bg-[#1a1a20] text-amber-500'}`}>Equip</button>
                  <button onClick={() => setShowInventory(!showInventory)} className={`px-5 ui-panel border-[#444] text-[10px] font-black uppercase tracking-[0.2em] hover:text-white hover:border-amber-600 transition-all rounded shadow-lg ${showInventory ? 'bg-amber-900/40 text-amber-100 border-amber-600' : 'bg-[#1a1a20] text-amber-500'}`}>Bag</button>
-                 <button onClick={() => { auth.signOut(); }} className="px-5 ui-panel bg-[#1a1a20] border-[#444] text-[10px] text-red-500 font-black uppercase tracking-[0.2em] hover:text-white hover:border-red-600 transition-all rounded shadow-lg">Exit</button>
+                 <button onClick={() => setShowRetireModal(true)} className="px-5 ui-panel bg-[#1a1a20] border-[#444] text-[10px] text-red-500 font-black uppercase tracking-[0.2em] hover:text-red-300 hover:border-red-900 transition-all rounded shadow-lg">Retire</button>
+                 <button onClick={() => { auth.signOut(); }} className="px-5 ui-panel bg-[#1a1a20] border-[#444] text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] hover:text-white hover:border-slate-500 transition-all rounded shadow-lg">Exit</button>
               </div>
          </div>
       </div>
